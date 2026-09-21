@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stalzone Case Opening</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Подключаем иконки (например, FontAwesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Шапка сайта -->
+    <header>
+        <div class="logo">STALZONE</div>
+        <nav>
+            <a href="#" class="active">ИНВЕНТАРЬ</a>
+            <a href="#">КЕЙСЫ</a>
+            <a href="#">АПГРЕЙДЫ</a>
+            <a href="#">НАГРАДЫ</a>
+        </nav>
+        <div class="auth">
+            <button id="login-btn">ВОЙТИ ЧЕРЕЗ STEAM</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Боковая панель (Инвентарь) -->
+        <aside class="sidebar">
+            <div class="user-info">
+                <div class="avatar"></div>
+                <div class="balance">Баланс: <span id="user-balance">1000 ₽</span></div>
+            </div>
+            <h3>Мой Инвентарь</h3>
+            <div class="inventory-list" id="inventory">
+                <!-- Сюда будут добавляться предметы -->
+                <p class="empty-msg">Инвентарь пуст...</p>
+            </div>
+        </aside>
+
+        <!-- Основной контент -->
+        <main>
+            <h2>Кейсы Stalzone</h2>
+            <div class="cases-grid" id="cases-container">
+                <!-- Кейсы генерируются через JS -->
+            </div>
+
+            <!-- Секция Апгрейда (упрощенная) -->
+            <div class="upgrade-section">
+                <h2>Апгрейдер</h2>
+                <div class="upgrade-area">
+                    <div class="slot">Ваш предмет</div>
+                    <i class="fas fa-arrow-right"></i>
+                    <div class="slot">Желаемый предмет</div>
+                    <button class="upgrade-btn">Апгрейд</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Модальное окно открытия кейса (Рулетка) -->
+    <div class="modal" id="case-modal">
+        <div class="modal-content">
+            <h3 id="modal-title">Открытие кейса...</h3>
+            <div class="roulette-container">
+                <div class="roulette-strip" id="roulette-strip">
+                    <!-- Элементы рулетки -->
+                </div>
+                <div class="arrow"></div>
+            </div>
+            <button id="close-modal" class="close-btn">Забрать предмет</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
