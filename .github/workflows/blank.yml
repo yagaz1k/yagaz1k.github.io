@@ -1,0 +1,73 @@
+const express = require('express');
+const session = require('express-session');
+const path = require('path');
+const { setupSteamAuth } = require('./auth');
+const { openCase, getCases, loadItemsDatabase } = require('./caseLogic');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(express.json());
+app.use(express.static(path.join(__dirname, '../client')));
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'stalzone-case-secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 24 * 60 * 60 * 1000 } // 24 часа
+}));
+
+// Инициализация базы предметов
+loadItemsDatabase();
+
+// Настройка Steam авторизации
+setupSteamAuth(app);
+
+// Middleware проверки авторизации
+function requireAuth(req, res, next) {
+    if (!req.session.user) {
+        return res.status(401).json({ error: 'Требуется авторизация' });
+    }
+    next();
+}
+
+// API: получить список кейсов
+app.get('/api/cases', requireAuth, (req, res) => {
+    const cases = getCases();
+    res.json(cases);
+});
+
+// API: открыть кейс
+app.post('/api/open-case', requireAuth, (req, res) => {
+    const { caseId } = req.body;
+    
+    if (!caseId) {
+        return res.status(400).json({ error: 'Не указан кейс' });
+    }
+    
+    const result = openCase(caseId, req.session.user.steamid);
+    
+    if (result.error) {
+        return res.status(400).json(result);
+    }
+    
+    res.json(result);
+});
+
+// API: получить информацию о пользователе
+app.get('/api/me', (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ error: 'Не авторизован' });
+    }
+    res.json(req.session.user);
+});
+
+// API: выход
+app.get('/api/logout', (req, res) => {
+    req.session.destroy();
+    res.json({ success: true });
+});
+
+app.listen(PORT, () => {
+    console.log(`Сервер запущен: http://localhost:${PORT}`);
+});
